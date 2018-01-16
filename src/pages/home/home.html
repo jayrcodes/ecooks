@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      eCooks
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar (ionInput)="sayText($event)"></ion-searchbar>
+  <!-- <ion-item>
+    <ion-label stacked>Text:</ion-label>
+    <ion-textarea rows="5" [(ngModel)]="text"></ion-textarea>
+  </ion-item> -->
+
+  <ion-list>
+    <button ion-item *ngFor="let recipe of recipes" (click)="itemSelected(recipe)">
+      {{ recipe.name }}
+    </button>  
+  </ion-list>
+
+</ion-content>
