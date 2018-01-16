@@ -12,8 +12,12 @@ import { LoadingController } from 'ionic-angular';
 })
 export class RecipeInstructionsComponent {
   id = String
-  recipes: any
   loader: any
+  recipeDetails = {
+    title: '',
+    id: 0,
+    body: ''
+  }
 
   constructor (
       private navParams: NavParams,
@@ -27,13 +31,13 @@ export class RecipeInstructionsComponent {
     this.loader = this.loadingCtrl.create({
       content: "Please wait..."
     });
-    this.getRecipes()
+    this.getRecipe(this.id)
   }
 
-  getRecipes () {
+  getRecipe (id) {
     this.loader.present()
-    this.recipe.getRecipes().subscribe(res => {
-      this.recipes = res
+    this.recipe.getRecipe(id).subscribe((res: any) => {
+      this.recipeDetails = res
       this.loader.dismiss()
     })
   }

@@ -1,9 +1,17 @@
 <ion-header>
-  <ion-navbar color="primary">
-    <ion-title>
-      eCooks
-    </ion-title>
-  </ion-navbar>
+  <ion-toolbar>
+    <!-- <ion-buttons start>
+      <button ion-button icon-only color="royal">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons> -->
+    <ion-title>eCooks</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goToSavedRecipes()">
+        <ion-icon name="heart"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -14,9 +22,17 @@
   </ion-item> -->
 
   <ion-list>
-    <button ion-item *ngFor="let recipe of recipes" (click)="itemSelected(recipe)">
-      {{ recipe.name }}
-    </button>  
+    <ion-item *ngFor="let recipe of recipes" (click)="itemSelected(recipe)">
+      <ion-avatar item-start>
+        <img src="https://www.bbcgoodfood.com/sites/default/files/recipe-collections/collection-image/2013/05/frying-pan-pizza-easy-recipe-collection.jpg">
+      </ion-avatar>
+      <h2>{{ recipe.title }}</h2>
+      <p>description here boss</p>
+    </ion-item>
   </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>

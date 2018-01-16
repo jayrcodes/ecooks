@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { RecipeInstructionsComponent } from '../components/recipe-instructions/recipe-instructions';
+import { SavedRecipesComponent } from '../components/saved-recipes/saved-recipes';
 
 // Libraries
 import { TextToSpeech } from '@ionic-native/text-to-speech';
@@ -18,7 +19,8 @@ import { RecipesProvider } from '../providers/recipes/recipes';
   declarations: [
     MyApp,
     HomePage,
-    RecipeInstructionsComponent
+    RecipeInstructionsComponent,
+    SavedRecipesComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +32,8 @@ import { RecipesProvider } from '../providers/recipes/recipes';
   entryComponents: [
     MyApp,
     HomePage,
-    RecipeInstructionsComponent
+    RecipeInstructionsComponent,
+    SavedRecipesComponent
   ],
   providers: [
     StatusBar,

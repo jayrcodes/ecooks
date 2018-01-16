@@ -15,4 +15,8 @@ export class RecipesProvider {
     return this.http.get('https://jsonplaceholder.typicode.com/posts')
   }
 
+  getRecipe (id) {
+    return this.http.get('https://jsonplaceholder.typicode.com/posts/' + id)
+  }
+
 }
