@@ -7,13 +7,14 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
+import { HomePage } from '../components/home/home';
 import { RecipeInstructionsComponent } from '../components/recipe-instructions/recipe-instructions';
 import { SavedRecipesComponent } from '../components/saved-recipes/saved-recipes';
 
 // Libraries
 import { TextToSpeech } from '@ionic-native/text-to-speech';
-import { RecipesProvider } from '../providers/recipes/recipes';
+import { RecipeProvider } from '../providers/recipe/recipe';
+import { CategoryProvider } from '../providers/category/category';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { RecipesProvider } from '../providers/recipes/recipes';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     TextToSpeech,
-    RecipesProvider
+    RecipeProvider,
+    CategoryProvider
   ]
 })
 export class AppModule {}

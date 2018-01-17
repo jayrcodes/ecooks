@@ -1,0 +1,1 @@
+export default 'http://chadzscript.dev/ecooks-api' 

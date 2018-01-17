@@ -1,37 +1,38 @@
 import { Component } from '@angular/core';
 import { NavParams } from 'ionic-angular';
-import { RecipesProvider } from '../../providers/recipes/recipes'
+import { RecipeProvider } from '../../providers/recipe/recipe'
 import { LoadingController } from 'ionic-angular';
 
 @Component({
   selector: 'recipe-instructions',
   templateUrl: 'recipe-instructions.html',
   providers: [
-    RecipesProvider
+    RecipeProvider
   ]
 })
 export class RecipeInstructionsComponent {
   id = String
   loader: any
   recipeDetails = {
-    title: '',
+    name: 'test',
     id: 0,
-    body: ''
+    body: 'test body'
   }
 
   constructor (
       private navParams: NavParams,
-      private recipe: RecipesProvider,
+      private recipe: RecipeProvider,
       public loadingCtrl: LoadingController
     ) {
   }
 
   ngOnInit () {
-    this.id = this.navParams.get('id')
-    this.loader = this.loadingCtrl.create({
-      content: "Please wait..."
-    });
-    this.getRecipe(this.id)
+    this.recipeDetails.id = this.navParams.get('id')
+
+    // this.loader = this.loadingCtrl.create({
+    //   content: "Please wait..."
+    // });
+    // this.getRecipe(this.id)
   }
 
   getRecipe (id) {

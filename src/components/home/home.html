@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- <ion-buttons start>
+      <button ion-button icon-only color="royal">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons> -->
+    <ion-title>eCooks</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goToSavedRecipes()">
+        <ion-icon name="heart"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar 
+    debounce="1500"
+    (ionInput)="sayText($event)">
+  </ion-searchbar>
+
+  <ion-list *ngIf="mode === 'category'">
+    <ion-list-header>
+      Categories
+    </ion-list-header>
+    <button ion-item *ngFor="let category of categories" (click)="categorySelected(category)">
+      {{ category.name }}
+    </button>
+  </ion-list>
+
+  <ion-list *ngIf="mode === 'recipe'">
+    <ion-list-header style="padding: 0;">
+      <ion-grid style="padding: 0;">
+        <ion-row style="padding: 0;">
+          <ion-col col-2 style="padding: 0;">
+            <button ion-button icon-only clear (click)="goToCategories()">
+              <ion-icon name="arrow-back"></ion-icon>
+            </button>
+          </ion-col>
+          <ion-col col-10 style="display: flex; align-items: center; padding: 0;">
+            <span>{{ currentCategory }}</span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-list-header>
+    <ion-item *ngFor="let recipe of recipes" (click)="recipeSelected(recipe)">
+      <ion-avatar item-start>
+        <img src="{{ baseUrl + '/assets/images/' + recipe.img_url }}">
+      </ion-avatar>
+      <h2>{{ recipe.name }}</h2>
+      <p>description here boss</p>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <div style="text-align: center;" *ngIf="isError">
+    <button ion-button icon-only round color="light" (click)="retry()">
+      <ion-icon name="refresh"></ion-icon>
+    </button>
+  </div>
+
+</ion-content>
