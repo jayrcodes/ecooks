@@ -11,7 +11,7 @@ export class CategoryProvider {
   }
 
   getCategories () {
-    return this.http.get(`${baseUrl}/Categories/get_categories`)
+    return this.http.get(`${baseUrl}/categories`)
   }
 
   getRecipes (id) {

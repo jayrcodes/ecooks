@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavParams } from 'ionic-angular';
 import { RecipeProvider } from '../../providers/recipe/recipe'
 import { LoadingController } from 'ionic-angular';
+import baseUrl from '../../constants/baseUrl'
 
 @Component({
   selector: 'recipe-instructions',
@@ -11,11 +12,12 @@ import { LoadingController } from 'ionic-angular';
   ]
 })
 export class RecipeInstructionsComponent {
+  baseUrl = baseUrl
   id = String
   loader: any
   recipeDetails = {
     name: 'test',
-    id: 0,
+    recipe_id: 0,
     body: 'test body'
   }
 
@@ -27,19 +29,18 @@ export class RecipeInstructionsComponent {
   }
 
   ngOnInit () {
-    this.recipeDetails.id = this.navParams.get('id')
-
-    // this.loader = this.loadingCtrl.create({
-    //   content: "Please wait..."
-    // });
-    // this.getRecipe(this.id)
+    this.recipeDetails.recipe_id = this.navParams.get('recipeId')
+    this.getRecipe(this.recipeDetails.recipe_id)
   }
 
-  getRecipe (id) {
-    this.loader.present()
-    this.recipe.getRecipe(id).subscribe((res: any) => {
-      this.recipeDetails = res
-      this.loader.dismiss()
+  getRecipe (recipeId) {
+    let loader = this.loadingCtrl.create({
+      content: "Please wait..."
+    });
+    loader.present()
+    this.recipe.getRecipe(recipeId).subscribe((res: any) => {
+      this.recipeDetails = res.data
+      loader.dismiss()
     })
   }
 

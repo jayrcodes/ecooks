@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import baseUrl from '../../constants/baseUrl'
 
 import 'rxjs/add/operator/map';
 
@@ -10,7 +11,11 @@ export class RecipeProvider {
   }
 
   getRecipe (id) {
-    return this.http.get('https://jsonplaceholder.typicode.com/posts/' + id)
+    return this.http.get(`${baseUrl}/recipes/${id}`)
+  }
+
+  searchRecipe (keyword) {
+    return this.http.get(`${baseUrl}/recipes?keyword=${keyword}`)
   }
 
 }

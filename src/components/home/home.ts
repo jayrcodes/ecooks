@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ToastController } from 'ionic-angular';
 import { LoadingController, AlertController } from 'ionic-angular';
 import { TextToSpeech } from '@ionic-native/text-to-speech';
 import { RecipeProvider } from '../../providers/recipe/recipe'
@@ -16,7 +16,8 @@ export class HomePage {
   baseUrl = baseUrl
   categories: any;
   currentPage = 1
-  currentCategory = null
+  currentTitle = null
+  currentCategoryId = null
   errorAlertObj = {
     title: 'Error',
     subTitle: 'Cannot retreive data. Please check your connection',
@@ -25,7 +26,7 @@ export class HomePage {
   isError = false;
   loader: any;
   mode = 'category' // category, recipe
-  recipes: any;
+  recipes = [];
 
   constructor(
     public navCtrl: NavController,
@@ -34,6 +35,7 @@ export class HomePage {
     private category: CategoryProvider,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
+    private toastCtrl: ToastController,
    ) {
   }
 
@@ -43,8 +45,62 @@ export class HomePage {
 
   categorySelected (category) {
     this.mode = 'recipe'
-    this.currentCategory = category.name
+    this.currentTitle = category.name
+    this.currentCategoryId = category.category_id
     this.getRecipes(category.category_id)
+  }
+
+  doRefresh (refresher) {
+    let errorAlert = this.alertCtrl.create(this.errorAlertObj);
+
+    switch (this.mode) {
+      case 'recipe':
+        this.category.getRecipes(this.currentCategoryId).subscribe(
+          (res: any) => {
+            this.recipes = res.data
+            refresher.complete()
+          },
+          err => {
+            errorAlert.present()
+            refresher.complete()
+          }
+        )
+        break;
+      case 'category':
+        this.category.getCategories().subscribe(
+          (res: any) => {
+            this.categories = res.data
+            refresher.complete()
+          },
+          err => {
+            errorAlert.present()
+            refresher.complete()
+          }
+        )
+        break;
+    }
+
+  }
+
+  doInfinite (infiniteScroll) {
+    let errorAlert = this.alertCtrl.create(this.errorAlertObj);
+
+    switch (this.mode) {
+      case 'recipe':
+        this.category.getRecipes(this.currentCategoryId).subscribe(
+          (newRecipes: Array<any>) => {
+            newRecipes.forEach(recipe => {
+              this.recipes.push(recipe)
+            })
+            infiniteScroll.complete()
+          },
+          err => {
+            errorAlert.present()
+            infiniteScroll.complete()
+          }
+        )
+        break;
+    }
   }
 
   getCategories () {
@@ -59,7 +115,6 @@ export class HomePage {
         loader.dismiss()
       },
       err => {
-        console.log(err)
         loader.dismiss()
         errorAlert.present()
         this.isError = true
@@ -92,28 +147,18 @@ export class HomePage {
 
   goToCategories () {
     this.mode = 'category'
+    this.recipes = []
     this.getCategories()
   }
 
-  doInfinite (infiniteScroll) {
-    let errorAlert = this.alertCtrl.create(this.errorAlertObj);
+  noResultFoundToast (message) {
+    let toast = this.toastCtrl.create({
+      message,
+      duration: 3000,
+      position: 'bottom'
+    });
 
-    switch (this.mode) {
-      case 'recipe':
-        this.recipe.getRecipes().subscribe(
-          (newRecipes: Array<any>) => {
-            newRecipes.forEach(recipe => {
-              this.recipes.push(recipe)
-            })
-            infiniteScroll.complete()
-          },
-          err => {
-            errorAlert.present()
-            infiniteScroll.complete()
-          }
-        )
-        break;
-    }
+    toast.present();
   }
 
   retry () {
@@ -124,20 +169,42 @@ export class HomePage {
     }
   }  
 
-  recipeSelected (recipe) {
-    this.navCtrl.push(RecipeInstructionsComponent, {
-      id: recipe.id
-    })
+  recipeSelected (recipeId) {
+    this.navCtrl.push(RecipeInstructionsComponent, { recipeId })
   }
 
-  async sayText($event) : Promise<any> {
+  searchRecipe ($event) {
+    let { value } = $event.target
+
+    if (!value) return;
+    value = value.trim()
+
+    let errorAlert = this.alertCtrl.create(this.errorAlertObj);
+    
+    if (value !== '') {
+      this.sayText(value)
+      this.mode = 'recipe'
+      this.recipe.searchRecipe(value).subscribe(
+        (res: any) => {
+          let { success, message, data } = res
+          if (success) {
+            this.currentTitle = `Results for "${value}"`
+            this.recipes = data
+          } else {
+            this.noResultFoundToast(message)
+            this.currentTitle = 'Back to categories'
+          }
+        },
+        () => {
+          errorAlert.present()
+        }
+      )
+    }
+  }
+
+  async sayText(keyword) : Promise<any> {
     try {
-      let { value } = $event.target
-
-      await this.tts.speak(value)
-
-      console.log(value)
-
+      await this.tts.speak(keyword)
     } catch (error) {
       console.log(error)
     }

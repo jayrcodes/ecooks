@@ -17,8 +17,19 @@
 <ion-content>
   <ion-searchbar 
     debounce="1500"
-    (ionInput)="sayText($event)">
+    (ionInput)="searchRecipe($event)">
   </ion-searchbar>
+
+  <p *ngIf="searchResultMessage !== ''">{{ searchResultMessage }}</p>
+
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
 
   <ion-list *ngIf="mode === 'category'">
     <ion-list-header>
@@ -30,7 +41,7 @@
   </ion-list>
 
   <ion-list *ngIf="mode === 'recipe'">
-    <ion-list-header style="padding: 0;">
+    <ion-list-header style="padding: 0;" >
       <ion-grid style="padding: 0;">
         <ion-row style="padding: 0;">
           <ion-col col-2 style="padding: 0;">
@@ -39,17 +50,17 @@
             </button>
           </ion-col>
           <ion-col col-10 style="display: flex; align-items: center; padding: 0;">
-            <span>{{ currentCategory }}</span>
+            <span>{{ currentTitle }}</span>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-list-header>
-    <ion-item *ngFor="let recipe of recipes" (click)="recipeSelected(recipe)">
+    <p style="text-align: center" *ngIf="recipes.length === 0">No recipes yet.</p>
+    <ion-item *ngFor="let recipe of recipes" (click)="recipeSelected(recipe.recipe_id)">
       <ion-avatar item-start>
         <img src="{{ baseUrl + '/assets/images/' + recipe.img_url }}">
       </ion-avatar>
       <h2>{{ recipe.name }}</h2>
-      <p>description here boss</p>
     </ion-item>
   </ion-list>
 

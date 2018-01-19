@@ -1,26 +1,32 @@
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>
-      Recipe Instructions
+      {{ recipeDetails.recipe }}
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content style="background: whitesmoke">
   
   <ion-card>
-
     <ion-item>
-      <h2>{{ recipeDetails.name }}</h2>
-      <p>{{ recipeDetails.id }}</p>
+      <h2>{{ recipeDetails.recipe }}</h2>
+      <p>{{ recipeDetails.category }}</p>
     </ion-item>
 
-    <img src="https://www.bbcgoodfood.com/sites/default/files/recipe-collections/collection-image/2013/05/frying-pan-pizza-easy-recipe-collection.jpg">
+    <img src="{{ baseUrl + '/assets/images/' + recipeDetails.img_url }}">
+  </ion-card>
 
+  <ion-card>
+    <ion-card-header>Ingredients</ion-card-header>
     <ion-card-content>
-      {{ recipeDetails.body }}
+      <div [innerHTML]="recipeDetails.ingredients"></div>
     </ion-card-content>
+  </ion-card>
 
+   <ion-card>
+    <ion-card-header>Instructions</ion-card-header>
+    <ion-card-content [innerHTML]="recipeDetails.instructions"></ion-card-content>
     <ion-row>
       <ion-col>
         <button ion-button icon-left clear small>
@@ -29,7 +35,6 @@
         </button>
       </ion-col>
     </ion-row>
-
   </ion-card>
 
 </ion-content>
