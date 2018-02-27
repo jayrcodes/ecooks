@@ -170,7 +170,10 @@ export class HomePage {
   }  
 
   recipeSelected (recipeId) {
-    this.navCtrl.push(RecipeInstructionsComponent, { recipeId })
+    this.navCtrl.push(RecipeInstructionsComponent, { 
+      isLocal: false,
+      recipeId
+    })
   }
 
   searchRecipe ($event) {
@@ -192,6 +195,7 @@ export class HomePage {
             this.recipes = data
           } else {
             this.noResultFoundToast(message)
+            this.recipes = []
             this.currentTitle = 'Back to categories'
           }
         },

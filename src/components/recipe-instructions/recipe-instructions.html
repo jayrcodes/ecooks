@@ -14,7 +14,7 @@
       <p>{{ recipeDetails.category }}</p>
     </ion-item>
 
-    <img src="{{ baseUrl + '/assets/images/' + recipeDetails.img_url }}">
+    <img src="{{ baseUrl + '/assets/images/' + recipeDetails.img_url }}" onError="this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8PQ_b9b1R9Omk4eOnk3ZKjdjpO46lippc-sOB9oKt4OVO_iPc'">
   </ion-card>
 
   <ion-card>
@@ -24,14 +24,18 @@
     </ion-card-content>
   </ion-card>
 
-   <ion-card>
+  <ion-card>
     <ion-card-header>Instructions</ion-card-header>
     <ion-card-content [innerHTML]="recipeDetails.instructions"></ion-card-content>
     <ion-row>
       <ion-col>
-        <button ion-button icon-left clear small>
+        <button ion-button icon-left clear small (click)="saveRecipe()" *ngIf="!isSaved">
           <ion-icon name="heart"></ion-icon>
           <div>Save recipe</div>
+        </button>
+        <button ion-button icon-left clear small (click)="unsave()" *ngIf="isSaved">
+          <ion-icon name="checkmark"></ion-icon>
+          <div>Saved</div>
         </button>
       </ion-col>
     </ion-row>
